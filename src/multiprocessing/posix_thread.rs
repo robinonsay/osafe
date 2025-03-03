@@ -4,7 +4,7 @@ use alloc::{boxed::Box, string::{String, ToString}};
 
 use crate::{error::{ErrNo, Error}, posix::{pthread_attr_t, pthread_cancel, pthread_create, pthread_join, pthread_t}};
 
-use super::Joinable;
+use super::Join;
 // create NULL constant
 const NULL: *mut ffi::c_void = 0 as *mut ffi::c_void;
 
@@ -86,7 +86,7 @@ impl<T> Thread<T>
     }
 }
 
-impl<T> Joinable<T> for Thread<T>
+impl<T> Join<T> for Thread<T>
 {
     fn join(&mut self) -> Result<Box<Option<T>>, Error> {
         let mut ret: *mut Option<T> = NULL as *mut Option<T>;

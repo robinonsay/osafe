@@ -20,7 +20,8 @@ type Job<T> = Box<dyn FnOnce() -> T + Send + 'static>;
 /// This function will return an error if the process fails to join or encounters
 /// any runtime errors during execution
 #[allow(dead_code)]
-trait Joinable<T>
+trait Join<T>
 {
+    /// Joins the thread with the current thread
     fn join(&mut self) -> Result<Box<Option<T>>, Error>;
 }
