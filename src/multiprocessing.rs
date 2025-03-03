@@ -8,6 +8,8 @@ pub mod posix_thread;
 #[cfg(feature = "posix")]
 pub mod posix_process;
 
+pub mod mutex;
+
 #[allow(dead_code)]
 type Job<T> = Box<dyn FnOnce() -> T + Send + 'static>;
 
