@@ -118,7 +118,7 @@ impl Drop for Process
     fn drop(&mut self) {
         if self.pid > 0
         {
-            Print::printstrln(&format!("Killing process {}", self.pid)).unwrap();
+            Print::printstr(&format!("Killing process {}\n", self.pid)).unwrap();
             self.signal(Signal::Interrupt).unwrap();
         }
     }
@@ -133,14 +133,14 @@ mod tests {
     fn test_process()
     {
         let process = Process::run(||{
-            Print::println("Hello from a new process!").unwrap();
+            Print::print("Hello from a new process!\n").unwrap();
             unsafe { sleep(10) };
-            Print::println("Process is still running!").unwrap();
+            Print::print("Process is still running!\n").unwrap();
         }).unwrap();
         match process {
             Some(process) =>
             {
-                Print::printstrln(&format!("The new process is {}", process.pid)).unwrap();
+                Print::printstr(&format!("The new process is {}\n", process.pid)).unwrap();
                 unsafe { sleep(1) };
                 process.signal(Signal::Interrupt).unwrap();
             },
@@ -152,9 +152,9 @@ mod tests {
     {
         {
             let _process = Process::run(||{
-                Print::println("Hello from a new process!").unwrap();
+                Print::print("Hello from a new process!\n").unwrap();
                 unsafe { sleep(5) };
-                Print::println("Process is still running!").unwrap();
+                Print::print("Process is still running!\n").unwrap();
             }).unwrap();
             unsafe { sleep(1) };
         }

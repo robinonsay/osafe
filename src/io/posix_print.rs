@@ -1,7 +1,8 @@
 use core::ffi;
 use alloc::string::{String, ToString};
 
-use crate::posix::printf;
+use crate::posix::write;
+use crate::posix::STDOUT_FILENO;
 
 use super::Printable;
 use super::Error;
@@ -11,45 +12,19 @@ pub struct Print;
 impl Printable for Print
 {
     fn print(msg: &str) -> Result<usize, Error> {
-        let mut msg = msg.to_string();
-        msg.push(0 as char);
         let ret = unsafe {
-            printf("%s\0".as_ptr() as *const ffi::c_char, msg.as_ptr())
+            write(STDOUT_FILENO as i32, msg.as_ptr() as *const ffi::c_void, msg.len())
         };
         if ret < 0
         {
             return Err(Error::IoErr("Posix: Failed to printf".to_string()));
         }
         Ok(ret as usize)
-    }
-    
-    fn println(msg: &str) -> Result<usize, Error> {
-        let mut msg = msg.to_string();
-        msg.push(0 as char);
-        let ret = unsafe {
-            printf("%s\n\0".as_ptr() as *const ffi::c_char, msg.as_ptr())
-        };
-        if ret < 0
-        {
-            return Err(Error::IoErr("Posix: Failed to printf".to_string()));
-        }
-        Ok(ret as usize) 
     }
     
     fn printstr(msg: &String) -> Result<usize, Error> {
         let ret = unsafe {
-            printf("%s\0".as_ptr() as *const ffi::c_char, msg.as_ptr())
-        };
-        if ret < 0
-        {
-            return Err(Error::IoErr("Posix: Failed to printf".to_string()));
-        }
-        Ok(ret as usize)
-    }
-    
-    fn printstrln(msg: &String) -> Result<usize, Error> {
-        let ret = unsafe {
-            printf("%s\n\0".as_ptr() as *const ffi::c_char, msg.as_ptr())
+            write(STDOUT_FILENO as i32, msg.as_ptr() as *const ffi::c_void, msg.len())
         };
         if ret < 0
         {
@@ -73,15 +48,7 @@ mod tests {
         assert!(result.is_ok());
         let ret = result.unwrap();
         assert_eq!(ret, test_str.len());
-        let result = Print::printstrln(&test_str);
-        assert!(result.is_ok());
-        let ret = result.unwrap();
-        assert_eq!(ret, test_str.len()+1);
         let result = Print::print(&test);
-        assert!(result.is_ok());
-        let ret = result.unwrap();
-        assert_eq!(ret, test_str.len());
-        let result = Print::println(&test);
         assert!(result.is_ok());
         let ret = result.unwrap();
         assert_eq!(ret, test_str.len()+1);

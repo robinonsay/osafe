@@ -14,7 +14,7 @@ fn subprocess()
 {
     let udp_recvr = UdpSocket::bind(PORT+1).unwrap();
     let start = udp_recvr.recv::<i32>().unwrap();
-    Print::printstrln(&format!("Recvd Test Data: {}", start)).unwrap();
+    Print::printstr(&format!("Recvd Test Data: {}\n", start)).unwrap();
     let udp_sender = UdpSocket::new("127.0.0.1".to_string(), PORT).unwrap();
     udp_sender.send(TEST_DATA).unwrap();
 }

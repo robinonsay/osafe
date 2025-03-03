@@ -1,2 +1,2 @@
 # OSafe
-Operating System Abstraction ForEver
+Operating System Abstraction For Embedded
