@@ -2,7 +2,10 @@ use alloc::boxed::Box;
 
 use crate::error::Error;
 
+#[cfg(feature = "posix")]
 pub mod posix_thread;
+
+#[cfg(feature = "posix")]
 pub mod posix_process;
 
 #[allow(dead_code)]

@@ -14,6 +14,8 @@ pub enum Error
     IpcError(String)
 }
 
+
+#[cfg(feature = "posix")]
 mod posix
 {
 use alloc::string::{String, ToString};

@@ -1,5 +1,6 @@
 use crate::error::Error;
 
+#[cfg(feature = "posix")]
 pub mod posix_udp;
 
 pub trait Communicate
