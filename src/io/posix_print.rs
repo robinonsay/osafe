@@ -51,6 +51,6 @@ mod tests {
         let result = LibCPrint::print(&test);
         assert!(result.is_ok());
         let ret = result.unwrap();
-        assert_eq!(ret, test_str.len()+1);
+        assert_eq!(ret, test_str.len());
     }
 }
