@@ -1,8 +1,8 @@
 use std::thread::sleep;
 use std::time::Duration;
 
-use osafe::io::posix_print::Print;
-use osafe::io::Printable;
+use osafe::io::posix_print::LibCPrint;
+use osafe::io::Print;
 use osafe::ipc::Communicate;
 use osafe::multiprocessing::posix_process::Process;
 use osafe::ipc::posix_udp::UdpSocket;
@@ -14,7 +14,7 @@ fn subprocess()
 {
     let udp_recvr = UdpSocket::bind(PORT+1).unwrap();
     let start = udp_recvr.recv::<i32>().unwrap();
-    Print::printstr(&format!("Recvd Test Data: {}\n", start)).unwrap();
+    LibCPrint::printstr(&format!("Recvd Test Data: {}\n", start)).unwrap();
     let udp_sender = UdpSocket::new("127.0.0.1".to_string(), PORT).unwrap();
     udp_sender.send(TEST_DATA).unwrap();
 }

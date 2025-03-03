@@ -4,12 +4,12 @@ use alloc::string::{String, ToString};
 use crate::posix::write;
 use crate::posix::STDOUT_FILENO;
 
-use super::Printable;
+use super::Print;
 use super::Error;
 
-pub struct Print;
+pub struct LibCPrint;
 
-impl Printable for Print
+impl Print for LibCPrint
 {
     fn print(msg: &str) -> Result<usize, Error> {
         let ret = unsafe {
@@ -44,11 +44,11 @@ mod tests {
     fn test_print(){
         let test= "Hello World\n";
         let test_str = test.to_string();
-        let result = Print::printstr(&test_str);
+        let result = LibCPrint::printstr(&test_str);
         assert!(result.is_ok());
         let ret = result.unwrap();
         assert_eq!(ret, test_str.len());
-        let result = Print::print(&test);
+        let result = LibCPrint::print(&test);
         assert!(result.is_ok());
         let ret = result.unwrap();
         assert_eq!(ret, test_str.len()+1);

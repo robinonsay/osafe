@@ -2,7 +2,7 @@ use core::ffi;
 
 use alloc::{format, string::String};
 
-use crate::{error::{ErrNo, Error}, io::{posix_print::Print, Printable}, posix::{__errno_location, __sigset_t, fork, kill, pid_t, sigaction, sigaction__bindgen_ty_1, SIGINT, SIGKILL, SIGTERM}};
+use crate::{error::{ErrNo, Error}, io::{posix_print::LibCPrint, Print}, posix::{__errno_location, __sigset_t, fork, kill, pid_t, sigaction, sigaction__bindgen_ty_1, SIGINT, SIGKILL, SIGTERM}};
 
 
 #[allow(dead_code)]
@@ -118,7 +118,7 @@ impl Drop for Process
     fn drop(&mut self) {
         if self.pid > 0
         {
-            Print::printstr(&format!("Killing process {}\n", self.pid)).unwrap();
+            LibCPrint::printstr(&format!("Killing process {}\n", self.pid)).unwrap();
             self.signal(Signal::Interrupt).unwrap();
         }
     }
@@ -127,20 +127,20 @@ impl Drop for Process
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{io::{posix_print::Print, Printable}, posix::sleep};
+    use crate::{io::{posix_print::LibCPrint, Print}, posix::sleep};
 
     #[test]
     fn test_process()
     {
         let process = Process::run(||{
-            Print::print("Hello from a new process!\n").unwrap();
+            LibCPrint::print("Hello from a new process!\n").unwrap();
             unsafe { sleep(10) };
-            Print::print("Process is still running!\n").unwrap();
+            LibCPrint::print("Process is still running!\n").unwrap();
         }).unwrap();
         match process {
             Some(process) =>
             {
-                Print::printstr(&format!("The new process is {}\n", process.pid)).unwrap();
+                LibCPrint::printstr(&format!("The new process is {}\n", process.pid)).unwrap();
                 unsafe { sleep(1) };
                 process.signal(Signal::Interrupt).unwrap();
             },
@@ -152,9 +152,9 @@ mod tests {
     {
         {
             let _process = Process::run(||{
-                Print::print("Hello from a new process!\n").unwrap();
+                LibCPrint::print("Hello from a new process!\n").unwrap();
                 unsafe { sleep(5) };
-                Print::print("Process is still running!\n").unwrap();
+                LibCPrint::print("Process is still running!\n").unwrap();
             }).unwrap();
             unsafe { sleep(1) };
         }
